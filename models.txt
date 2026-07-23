@@ -1,0 +1,48 @@
+# Restaurant Management System
+
+# Database tablename, field, datatype
+
+# User
+id 
+email
+password
+
+# UserProfile # o to o relation with User
+user_id (User Foreign key)
+full name
+phone
+email
+address
+role
+salary(optional)
+
+
+# Category
+id
+name     
+
+# Menu: One to many realtion
+id
+name 
+description(optional)
+category_id    (Foreign Key Category)
+price
+image
+
+# Table
+id
+number/name
+is_avaiable
+
+# Order
+id
+User  (Foreign Key User) o to m relation
+quantity
+total_price
+status ('Pending','complete','delivered')
+is_paid (Boolean)
+
+
+# OrderMenu
+order (Foreign key Order)
+menu (Foreign key Menu)
