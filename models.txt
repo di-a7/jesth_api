@@ -46,3 +46,16 @@ is_paid (Boolean)
 # OrderMenu
 order (Foreign key Order)
 menu (Foreign key Menu)
+
+
+
+# REST framework
+RE : REpresentational: representation of resources in a format JSON
+S : State : current stat of resources
+T : Transfer : transfer between client and server
+
+Uses:
+GET 
+POST
+PUT/PATCH
+DELETE
