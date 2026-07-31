@@ -3,5 +3,5 @@ from .views import *
 
 urlpatterns = [
    path('category/', CategoryGeneric.as_view()),
-   path('category/<pk>/', CategoryDetailGeneric.as_view()),
+   path('category/<id>/', CategoryDetailGeneric.as_view()),
 ]

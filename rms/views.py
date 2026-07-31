@@ -5,46 +5,72 @@ from .models import *
 from .serializer import CategorySerializer
 # Create your views here.
 # CLASS BASED VIEW
-# GENERIC VIEW
-from rest_framework.generics import GenericAPIView
-class CategoryGeneric(GenericAPIView):
+from rest_framework.generics import ListAPIView, CreateAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
+class CategoryGeneric(ListCreateAPIView):
    queryset = Category.objects.all()
    serializer_class = CategorySerializer
-   
-   def get(self,request):
-      category = self.get_queryset()
-      serializer = self.serializer_class(category, many=True)
-      return Response(serializer.data)
-   
-   def post(self,request):
-      serializer = self.serializer_class(data=request.data)
-      serializer.is_valid(raise_exception=True)
-      serializer.save()
-      return Response(serializer.data)
 
-class CategoryDetailGeneric(GenericAPIView):
+class CategoryDetailGeneric(RetrieveUpdateDestroyAPIView):
    queryset = Category.objects.all()
    serializer_class = CategorySerializer
+   lookup_field = 'id'
    
-   def get(self,request,pk):
+   def delete(self,request,id):
       category = self.get_object()
-      serializer = self.serializer_class(category)
-      return Response(serializer.data)
-
-   def put(self,request,pk):
-      category = self.get_object()
-      serializer = CategorySerializer(category, data=request.data)
-      serializer.is_valid(raise_exception=True)
-      serializer.save()
-      return Response(serializer.data)
-   
-   def delete(self,request,pk):
-      category = self.get_object()           # Category.objects.get(id = id)
       item = OrderMenu.objects.filter(menu__category = category).count()
       if item > 0:
          return Response({"message":"Data can't be deleted. Protected Foreign Key in OrderMenu"})
       category.delete()
       return Response({"message":"Data has been deleted."})
+
+
+
+# GENERIC VIEW with mixin
+# from rest_framework.generics import GenericAPIView
+# from rest_framework import mixins
+# class CategoryGeneric(GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+#    queryset = Category.objects.all()
+#    serializer_class = CategorySerializer
+   
+#    def get(self,request):
+#       return self.list(request)
+#       # category = self.get_queryset()
+#       # serializer = self.serializer_class(category, many=True)
+#       # return Response(serializer.data)
+   
+#    def post(self,request):
+#       return self.create(request)
+#    #    serializer = self.serializer_class(data=request.data)
+#    #    serializer.is_valid(raise_exception=True)
+#    #    serializer.save()
+#    #    return Response(serializer.data)
+
+# class CategoryDetailGeneric(GenericAPIView,mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+#    queryset = Category.objects.all()
+#    serializer_class = CategorySerializer
+#    lookup_field = 'id'
+   
+#    def get(self,request,id):
+#       return self.retrieve(request, id)
+#       # category = self.get_object()
+#       # serializer = self.serializer_class(category)
+#       # return Response(serializer.data)
+
+#    def put(self,request,id):
+#       return self.update(request, id)
+#       # category = self.get_object()
+#       # serializer = CategorySerializer(category, data=request.data)
+#       # serializer.is_valid(raise_exception=True)
+#       # serializer.save()
+#       # return Response(serializer.data)
+   
+#    def delete(self,request,id):
+#       category = self.get_object()           # Category.objects.get(id = id)
+#       item = OrderMenu.objects.filter(menu__category = category).count()
+#       if item > 0:
+#          return Response({"message":"Data can't be deleted. Protected Foreign Key in OrderMenu"})
+#       category.delete()
+#       return Response({"message":"Data has been deleted."})
 
 # APIVIEW
 # from rest_framework.views import APIView
