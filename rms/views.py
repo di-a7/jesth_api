@@ -7,7 +7,7 @@ from .serializer import *
 # CLASS BASED VIEW
 # VIEWSET:
 
-from rest_framework.viewsets import ViewSet, ModelViewSet
+from rest_framework.viewsets import ViewSet, ModelViewSet, ReadOnlyModelViewSet
 class CategoryModelViewSet(ModelViewSet):
    queryset = Category.objects.all()
    serializer_class = CategoryModelSerializer
@@ -19,6 +19,14 @@ class CategoryModelViewSet(ModelViewSet):
          return Response({"message":"Data can't be deleted. Protected Foreign Key in OrderMenu"})
       category.delete()
       return Response({"message":"Data has been deleted."})
+
+
+class MenuModelViewSet(ModelViewSet):
+   queryset = Menu.objects.all()
+   serializer_class = MenuSerializer
+
+
+# add data in menu table
 
 # class CategoryViewSet(ViewSet):
 #    def list(self,request):
