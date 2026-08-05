@@ -3,6 +3,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import *
 from .serializer import *
+from rest_framework.pagination import PageNumberPagination
+from .pagination import CategoryPagination
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
 # Create your views here.
 # CLASS BASED VIEW
 # VIEWSET:
@@ -11,7 +15,8 @@ from rest_framework.viewsets import ViewSet, ModelViewSet, ReadOnlyModelViewSet
 class CategoryModelViewSet(ModelViewSet):
    queryset = Category.objects.all()
    serializer_class = CategoryModelSerializer
-   
+   pagination_class = CategoryPagination
+
    def destroy(self,request,id):
       category = Category.objects.get(id = id)
       item = OrderMenu.objects.filter(menu__category = category).count()
@@ -20,10 +25,15 @@ class CategoryModelViewSet(ModelViewSet):
       category.delete()
       return Response({"message":"Data has been deleted."})
 
-
+from .filters import MenuFilter
 class MenuModelViewSet(ModelViewSet):
-   queryset = Menu.objects.all()
+   queryset = Menu.objects.select_related('category').all()
    serializer_class = MenuSerializer
+   pagination_class = PageNumberPagination
+   filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+   filterset_class = MenuFilter
+   # filterset_fields = ['category']
+   search_fields = ['name','category__name']
 
 
 # add data in menu table
