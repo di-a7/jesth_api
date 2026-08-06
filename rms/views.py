@@ -26,6 +26,7 @@ class CategoryModelViewSet(ModelViewSet):
       return Response({"message":"Data has been deleted."})
 
 from .filters import MenuFilter
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 class MenuModelViewSet(ModelViewSet):
    queryset = Menu.objects.select_related('category').all()
    serializer_class = MenuSerializer
@@ -34,6 +35,7 @@ class MenuModelViewSet(ModelViewSet):
    filterset_class = MenuFilter
    # filterset_fields = ['category']
    search_fields = ['name','category__name']
+   permission_classes = [IsAuthenticated]
 
 
 # add data in menu table
