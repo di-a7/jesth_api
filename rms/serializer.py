@@ -13,10 +13,14 @@ class CategoryModelSerializer(ModelSerializer):
    
    def save(self, **kwargs):
       validated_data = self.validated_data
-      item = Category.objects.filter(name = validated_data.get('name')).count()
-      if item > 0:
-         raise serializers.ValidationError({"message":"Data already exists"})
-      return super().save(self.instance,**kwargs)
+      item = Category.objects.filter(name = validated_data.get('name'))
+      if self.instance:
+         item = item.exclude(pk=self.instance.pk)
+      if item.exists():
+         raise serializers.ValidationError(
+            {"message": "Data already exists"}
+         )
+      return super().save(**kwargs)
    
    # def create(self, validated_data):
    #    item = Category.objects.filter(name = validated_data.get('name')).count()
@@ -30,14 +34,13 @@ class CategoryModelSerializer(ModelSerializer):
    #       raise serializers.ValidationError({"message":"Data already exists"})
    #    return super().update(instance, validated_data)
 
-
 class MenuSerializer(ModelSerializer):
    price_with_tax = serializers.SerializerMethodField()
-   category = serializers.StringRelatedField()
-   category_id = serializers.PrimaryKeyRelatedField(queryset = Category.objects.all())
+   # category = serializers.StringRelatedField(read_only=True)
+   # category_id = serializers.PrimaryKeyRelatedField(queryset = Category.objects.all())
    class Meta:
       model = Menu
-      fields = ['id' , 'name', 'category_id','category','price','price_with_tax']
+      fields = ['id' , 'name','category','price','price_with_tax']
    
    def get_price_with_tax(self, menu:Menu):
       return menu.price * 0.13 + menu.price

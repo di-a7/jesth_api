@@ -17,8 +17,8 @@ class CategoryModelViewSet(ModelViewSet):
    serializer_class = CategoryModelSerializer
    pagination_class = CategoryPagination
 
-   def destroy(self,request,id):
-      category = Category.objects.get(id = id)
+   def destroy(self,request,pk):
+      category = Category.objects.get(pk=pk)
       item = OrderMenu.objects.filter(menu__category = category).count()
       if item > 0:
          return Response({"message":"Data can't be deleted. Protected Foreign Key in OrderMenu"})
@@ -27,6 +27,8 @@ class CategoryModelViewSet(ModelViewSet):
 
 from .filters import MenuFilter
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
+
+
 class MenuModelViewSet(ModelViewSet):
    queryset = Menu.objects.select_related('category').all()
    serializer_class = MenuSerializer
