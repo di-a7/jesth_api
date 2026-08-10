@@ -1,7 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
+# from django.contrib.auth.models import User
 # from django.contrib.auth import get_user_model
 # User = get_user_model()
+User = settings.AUTH_USER_MODEL
 # Create your models here.
 class Category(models.Model):    # breakfast, dinner, lunch, drink
    name = models.CharField(max_length = 200)

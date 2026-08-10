@@ -29,7 +29,7 @@ DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = []
 
-
+AUTH_USER_MODEL = 'user.User'
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rms',
+    'user',
     
     "rest_framework",
     "debug_toolbar",
@@ -85,7 +86,7 @@ WSGI_APPLICATION = 'project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'j_rms',
+        'NAME': 'new_j_rms',
         'USER': 'postgres',
         'PASSWORD': '123',
         'HOST': 'localhost',
