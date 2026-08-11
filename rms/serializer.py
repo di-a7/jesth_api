@@ -47,6 +47,60 @@ class MenuSerializer(ModelSerializer):
    
    # calculate 10% discount and show using api
 
+class OrderMenuSerializer(ModelSerializer):
+   class Meta:
+      model = OrderMenu
+      fields = ['menu']
+
+class OrderSerializer(ModelSerializer):
+   user = serializers.HiddenField(default = serializers.CurrentUserDefault())
+   total_price = serializers.FloatField(read_only = True)
+   status = serializers.CharField(read_only=True)
+   is_paid = serializers.BooleanField(read_only=True)
+   items = OrderMenuSerializer(many=True)
+   class Meta:
+      model = Order
+      fields = ['id',"user","quantity","total_price","status","is_paid",'items']
+   
+   def create(self, validated_data):
+      items = validated_data.pop('items')
+      total = 0
+      for item in items:
+         food_id = item.get('menu')
+         food_price = food_id.price * validated_data.get('quantity')
+         total += food_price
+      
+      order = Order.objects.create(total_price = total,**validated_data)
+      for item in items:
+         OrderMenu.objects.create(order = order, menu=item.get('menu'))
+      return order
+
+# ordermenu.quantity field add
+# validated_data :
+#    {
+#       "quantity": 2,
+#    }
+
+# items :
+# "items": [
+#          {
+#          "menu": 11,
+#           "quantity":2
+#          },
+#           {
+   #           "menu": 12
+#              "quantity":5
+   #        }
+# ]
+
+
+
+
+
+
+
+
+
 # class CategorySerializer(serializers.Serializer):
 #    id = serializers.IntegerField(read_only=True)
 #    name = serializers.CharField()

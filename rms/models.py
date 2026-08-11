@@ -40,5 +40,5 @@ class Order(models.Model):
    is_paid = models.BooleanField(default=False)
 
 class OrderMenu(models.Model):
-   order = models.ForeignKey(Order, on_delete=models.PROTECT)
-   menu = models.ForeignKey(Menu, on_delete=models.PROTECT)
+   order = models.ForeignKey(Order, on_delete=models.PROTECT, related_name='items')
+   menu = models.ForeignKey(Menu, on_delete=models.PROTECT, related_name='items')
