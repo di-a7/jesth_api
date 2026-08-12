@@ -10,9 +10,13 @@ from django_filters.rest_framework import DjangoFilterBackend
 # Create your views here.
 # CLASS BASED VIEW
 # VIEWSET:
-
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 from rest_framework.viewsets import ViewSet, ModelViewSet, ReadOnlyModelViewSet
-class CategoryModelViewSet(ModelViewSet):
+from .filters import MenuFilter
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
+
+@extend_schema(tags=["category"])
+class CategoryModelViewSet(ReadOnlyModelViewSet):
    queryset = Category.objects.all()
    serializer_class = CategoryModelSerializer
    pagination_class = CategoryPagination
@@ -25,11 +29,9 @@ class CategoryModelViewSet(ModelViewSet):
       category.delete()
       return Response({"message":"Data has been deleted."})
 
-from .filters import MenuFilter
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 
-
-class MenuModelViewSet(ModelViewSet):
+@extend_schema(tags=["menu"])
+class MenuModelViewSet(ReadOnlyModelViewSet):
    queryset = Menu.objects.select_related('category').all()
    serializer_class = MenuSerializer
    pagination_class = PageNumberPagination
@@ -40,6 +42,7 @@ class MenuModelViewSet(ModelViewSet):
    permission_classes = [IsAuthenticated]
 
 
+@extend_schema(tags=["order"])
 class OrderViewSet(ModelViewSet):
    queryset = Order.objects.all()
    serializer_class = OrderSerializer
