@@ -27,4 +27,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('rms.urls')),
     path('auth/', include('user.urls')),
+    path('payment/', include('payment.urls')),
 ] + debug_toolbar_urls()
