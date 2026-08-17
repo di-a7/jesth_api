@@ -163,3 +163,4 @@ EMAIL_BACKEND = "anymail.backends.mailtrap.EmailBackend"
 
 KHALTI_LIVE_KEY = os.getenv('KHALTI_LIVE_KEY')
 KHALTI_INITIATE_URL = os.getenv('KHALTI_INITIATE_URL')
+KHALTI_LOOKUP_URL = os.getenv('KHALTI_LOOKUP_URL')
